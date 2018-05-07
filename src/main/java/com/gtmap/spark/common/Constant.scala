@@ -17,7 +17,7 @@ object Constant {
   val pwd: String = "gtis" //连接数据库密码
 
   //jar包位置
-  val jar: String = "D:\\0-SVNProject\\spark\\spark.jar"
+  val jar: String =  System.getProperty("user.dir")+"\\spark.jar"
   val jdbc: String = "D:\\spark-2.1.1-bin-hadoop2.7\\ojdbc-14.jar"
   val jars = ArrayBuffer[String](jar, jdbc)
 
@@ -28,7 +28,7 @@ object Constant {
   }
   def getNowDate():String={
     val now:Date = new Date()
-    val dateFormat:SimpleDateFormat = new SimpleDateFormat("yyyyMMdd")
+    val dateFormat:SimpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss")
     val sdf = dateFormat.format( now )
     sdf
   }
@@ -39,6 +39,11 @@ object Constant {
   //处理结果集函数
   def extractValues3(r: ResultSet) = {
     (r.getString(1), r.getString(2),r.getString(3))
+  }
+  //处理结果集函数
+  def extractValues5(r: ResultSet) = {
+    (r.getString(1), r.getString(2), r.getString(3)
+      , r.getString(4), r.getString(5))
   }
   //处理结果集函数
   def extractValues6(r: ResultSet) = {

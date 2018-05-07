@@ -37,6 +37,15 @@ object DataFromFile {
       .option("delimiter", ",") //分隔符，默认为 ,
       .load("hdfs://master:9000/Bdcdj/bdcxm")
     val rowsXM: RDD[Row] = xm.rdd
+
+    val fdcq = spark1.read.format("com.databricks.spark.csv")
+      .option("header", "false")
+      .option("inferSchema", "false") //是否自动推到内容的类型
+      .option("delimiter", ",") //分隔符，默认为 ,
+      .load("hdfs://master:9000/Bdcdj/fdcq")
+    val rowsFdcq: RDD[Row] = fdcq.rdd
+
+
     //    //proid关联抵押登记结束时间
     val xmRdd = rowsXM.filter(x => x(10) != null).keyBy(x => x(0)).map(x => (x._1.toString, (x._2(1), x._2(2), x._2(3), x._2(4), x._2(5), x._2(6), x._2(7), x._2(8)
       , x._2(9), x._2(10), x._2(11), x._2(12), x._2(13), x._2(14), x._2(15), x._2(16), x._2(17))))
@@ -60,8 +69,8 @@ object DataFromFile {
 
     val totAllSj = xmWithSj.map(x => (x._1, (x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._8, x._2._1._11
       //nd.qlid, nd.BDCDYID, nd.ZWLXKSQX, nd.ZWLXJSQX, nd.BDBZZQSE, nd.BJSJ
-      , x._2._2._1, x._2._2._2, x._2._2._3, x._2._2._4, x._2._2._5, x._2._2._6, Math.abs(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(x._2._1._8.toString).getTime -
-      new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(x._2._2._6.toString).getTime)
+      , x._2._2._1, x._2._2._2, x._2._2._3, x._2._2._4, x._2._2._5, x._2._2._6, Math.abs(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._1._8.toString).getTime -
+      new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._2._6.toString).getTime)
     )))
     //    println(totAllSj.count)
     ////    (320506109110GB00025F00300904,(bdcdyzx-TX201706033400,TX201706033400,18,2017-06-13 14:41:19.0,320506109110GB00025F00300904,bdcdy-43278,320506109110GB00025F00300904,2016-06-13 00:00:00.0,2021-06-13 00:00:00.0,111,2016-07-01 09:37:58.0,29999040000))
@@ -69,38 +78,46 @@ object DataFromFile {
 
     //    //排序并获取最小时间
     val xmMinSj = xmWithSj.map(x => (x._2._1._1,
-      Math.abs((new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(x._2._1._8.toString).getTime -
-        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s").parse(x._2._2._6.toString).getTime))
+      Math.abs((new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._1._8.toString).getTime -
+        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._2._6.toString).getTime))
     )).sortBy(x => x._1.toString).groupByKey().map(x => (x._1, x._2.toList.sorted.reverse.last))
     ////    (bdcdy-44722,0)
     ////    (bdcdy-53768,0)
     //    println(xmMinSj.count)
-    val xxxx = totAllSj.map(x => (x._2._1, x._2._2, x._2._3, x._2._4, x._2._5, x._2._6, x._2._7
+
+    //项目和抵押信息
+    val xmAndDyxx = totAllSj.map(x => (x._2._1, x._2._2, x._2._3, x._2._4, x._2._5, x._2._6, x._2._7
       , x._2._8, x._2._9, x._2._10, x._2._11, x._2._12))
       .keyBy(x => x._1).leftOuterJoin(xmMinSj)
-      .map(x => (x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._4, x._2._1._5, x._2._1._6, x._2._1._7, x._2._1._8, x._2._1._9, x._2._1._10, x._2._1._11
-        , x._2._1._12, x._2._2.toList.sorted.reverse.last))
-      .filter(x => x._12 == x._13).filter(x => x._9 != null)
+      .map(x => (x._2._1._1,(x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._4, x._2._1._5, x._2._1._6, x._2._1._7, x._2._1._8, x._2._1._9, x._2._1._10, x._2._1._11
+        , x._2._1._12, x._2._2.toList.sorted.reverse.last)))
+      .filter(x => x._2._12 == x._2._13).filter(x => x._2._9 != null)
+      //72753
+      //    (bdc-792154,201606006059002,4,2016-08-12 15:46:04.0,320506001103GB00112F00020401,bdcdy-49939,320506001103GB00112F00020401,2013-08-14 00:00:00.0,2043-08-14 00:00:00.0,74,2016-08-11 16:18:31.0,84480000,84480000)
+      //    (bdc-816412,201606006078634,4,2016-10-12 13:26:29.0,320506130041GB00006F00410806,bdcdy-63522,320506130041GB00006F00410806,2016-09-18 00:00:00.0,2046-09-18 00:00:00.0,85.6,2016-09-30 16:27:02.0,1025940000,1025940000)
 
-    //    (bdc-792154,201606006059002,4,2016-08-12 15:46:04.0,320506001103GB00112F00020401,bdcdy-49939,320506001103GB00112F00020401,2013-08-14 00:00:00.0,2043-08-14 00:00:00.0,74,2016-08-11 16:18:31.0,84480000,84480000)
-    //    (bdc-816412,201606006078634,4,2016-10-12 13:26:29.0,320506130041GB00006F00410806,bdcdy-63522,320506130041GB00006F00410806,2016-09-18 00:00:00.0,2046-09-18 00:00:00.0,85.6,2016-09-30 16:27:02.0,1025940000,1025940000)
+      //关联房地产权信息
+    val base = xmAndDyxx.join(rowsFdcq.keyBy(x=>x(2)).map(x=>(x._1,(x._2(4)))).filter(x=>x._2 != null && x._2.toString.toDouble >0))
+      //proid,(proid,取得价格,抵押结束时间,抵押开始时间,最高额)
+      .map(x=> (x._1,(x._1,x._2._2,x._2._1._9,x._2._1._8,x._2._1._10)))
+      //proid,(proid,取得价格,抵押时间,最高额)
+      .map(x=>(x._1,(x._1,x._2._2.toString.toDouble/10000.0,
+        Math.round((new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._3.toString).getTime -
+          new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._4.toString).getTime)/(1000*60*60*24*365.0)),
+      x._2._5)))
+      //proid,(proid,交易价格是否超过评估价格,年还款比例)
+      .map(x=> (x._1,(x._1,x._2._2.toDouble / x._2._4.toString.toDouble,x._2._2.toDouble / x._2._3.toDouble / x._2._4.toString.toDouble)))
+      //.take(10).foreach(println)
 
-    val objectEntity = xxxx.keyBy(x => (x._1))//.sortBy(x=>x._1.toString)  //.collect()
-//      .map(x => List(x._1.toString, x._2._1.toString, x._2._2.toString, x._2._3.toString, x._2._4.toString, x._2._5.toString, x._2._6.toString, x._2._7.toString, x._2._8.toString
-//      , x._2._9.toString, x._2._10.toString, x._2._11.toString, x._2._12.toString, x._2._13.toString).toArray)
-//        .filter(x=> x(0) != null)
-        .take(100).foreach(println)
-//      .mapPartitions { data =>
-//      val stringWriter = new StringWriter();
-//      val csvWriter = new CSVWriter(stringWriter);
-//      csvWriter.writeAll(data.toList)
-//      Iterator(stringWriter.toString)
-//    }.repartition(1).saveAsTextFile("hdfs://master:9000/tt/" + "tt")
+
+//    val objectEntity = base
+//      .map(x => (x._2._1,x._2._2,x._2._3))
+//    .repartition(1).saveAsTextFile("hdfs://master:9000/tt/" + "tt"+nowTime)
 //
 
     println("=============================================================================")
 
-
+    spark.stop()
   }
 
 }

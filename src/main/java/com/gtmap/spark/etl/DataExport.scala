@@ -19,7 +19,8 @@ object DataExport {
     val spark = new SparkContext(conf)
 
 
-    bdccf(spark)
+    fdcq(spark)
+//    bdccf(spark)
 //    bdcdya(spark)
 //    bdcxmrel(spark)
 //    qlrxx(spark)
@@ -89,6 +90,19 @@ object DataExport {
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
       }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "qlrxx")
+  }
+  def fdcq(spark: SparkContext): Unit = {
+    val sql :String = "select qlid,bdcdyid,proid,ghyt,JYJG from bdc_fdcq t where  1 = ? AND rownum < ?"
+    //读取数据
+    val dataXm = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
+      , mapRow = extractValues5)
+    val objectEntity = dataXm.keyBy(x => (x._1)).map(x => List(x._1, x._2._2,x._2._3,x._2._4,x._2._5).toArray)
+      .mapPartitions { data =>
+        val stringWriter = new StringWriter();
+        val csvWriter = new CSVWriter(stringWriter);
+        csvWriter.writeAll(data.toList)
+        Iterator(stringWriter.toString)
+      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "fdcq")
   }
 
 
