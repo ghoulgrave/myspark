@@ -1,7 +1,7 @@
 package com.gtmap.spark.etl
 
 import java.io.StringWriter
-import java.sql.ResultSet
+import java.sql.{Connection, ResultSet}
 import java.util.Date
 
 import scala.collection.JavaConversions._
@@ -17,19 +17,23 @@ object DataExport {
     val conf = new SparkConf().setAppName("rtl")
       .setMaster("spark://master:7077").setJars(Constant.jars)
     val spark = new SparkContext(conf)
+    Constant.conn= "jdbc:oracle:thin:@192.168.10.200:1521:orcl"
+    Constant.user= "BDCDJ_CC" //连接数据库用户名
+    Constant.pwd= "gtis" //连接数据库密码
+    Constant.filePath="hdfs://master:9000/Bdcdj1/"
 
-
-    fdcq(spark)
-//    bdccf(spark)
-//    bdcdya(spark)
-//    bdcxmrel(spark)
-//    qlrxx(spark)
-//    xmxx(spark)
+    fdcq(spark,Constant.filePath)
+    bdccf(spark,Constant.filePath)
+    bdcdya(spark,Constant.filePath)
+    bdcxmrel(spark,Constant.filePath)
+    qlrxx(spark,Constant.filePath)
+    xmxx(spark,Constant.filePath)
 
     println("OK");
   }
 
-  def bdccf(spark: SparkContext): Unit = {
+  def bdccf(spark: SparkContext,filePath:String): Unit = {
+//    val connn = createConnection//定义变量会出现序列化问题,暂时没有解决
     val sql :String = " select QLID,BDCDYID,CFFW,CFLX,CFWH,JFSJ,YWH,PROID,QSZT,ISSX from BDC_CF where 1 = ? AND rownum < ?"
     //读取数据
     val bdccf = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
@@ -41,10 +45,10 @@ object DataExport {
         val csvWriter = new CSVWriter(stringWriter);
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
-      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "cf")
+      }.saveAsTextFile(filePath + "cf")
   }
 
-  def bdcdya(spark: SparkContext): Unit = {
+  def bdcdya(spark: SparkContext,filePath:String): Unit = {
     val sql :String = " select qlid,BDCDYID,replace(zwr,chr(13)||chr(10),' ') as zwr,dyfs,ZWLXKSQX,ZWLXJSQX,ZXDYYWH" +
       ",ZXSJ,YWH,PROID,QSZT,case when ZGZQQDSE is not null then ZGZQQDSE else BDBZZQSE * 1.5 end as bdbzzqse,ZGZQQDSE from BDC_DYAQ where 1 = ? AND rownum < ?"
     //读取数据
@@ -57,11 +61,10 @@ object DataExport {
             val csvWriter = new CSVWriter(stringWriter);
             csvWriter.writeAll(data.toList)
             Iterator(stringWriter.toString)
-          }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "dya")
+          }.saveAsTextFile(filePath + "dya")
   }
 
-
-  def bdcxmrel(spark: SparkContext): Unit = {
+  def bdcxmrel(spark: SparkContext,filePath:String): Unit = {
     val sql :String = "select  RELID,PROID,QJID,YPROID,YDJXMLY,YQLID from BDC_XM_REL where 1 = ? AND rownum < ?"
     //读取数据
     val bdcxmrel = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
@@ -72,10 +75,10 @@ object DataExport {
         val csvWriter = new CSVWriter(stringWriter);
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
-      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "bdcxmrel")
+      }.saveAsTextFile(filePath + "bdcxmrel")
   }
 
-  def qlrxx(spark: SparkContext): Unit = {
+  def qlrxx(spark: SparkContext,filePath:String): Unit = {
     val sql :String = "select qlrid,proid,replace(qlrmc,chr(13)||chr(10),' ') as qlrmc,qlrzjh,qlrlx,replace(qlbl,chr(13)||chr(10),' ') as qlbl, gyfs,qlrxz,sxh,replace(gyqk,chr(13)||chr(10),' ') as gyqk,qlmj,QLRFDDBRZJH " +
       "from bdc_qlr t where  1 = ? AND rownum < ?"
     //读取数据
@@ -89,9 +92,9 @@ object DataExport {
         val csvWriter = new CSVWriter(stringWriter);
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
-      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "qlrxx")
+      }.saveAsTextFile(filePath + "qlrxx")
   }
-  def fdcq(spark: SparkContext): Unit = {
+  def fdcq(spark: SparkContext,filePath:String): Unit = {
     val sql :String = "select qlid,bdcdyid,proid,ghyt,JYJG,qszt from bdc_fdcq t where  1 = ? AND rownum < ?"
     //读取数据
     val dataXm = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
@@ -102,18 +105,9 @@ object DataExport {
         val csvWriter = new CSVWriter(stringWriter);
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
-      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "fdcq")
+      }.saveAsTextFile(filePath + "fdcq")
   }
-
-
-
-
-  case class Bdcxm(proid: String, bh: String, qllx: String, djlx: String, sqfbcz: String
-                   , xmzt: String,  xmly: String
-                   , bjsj: String, lsh: String, sqlx: String, bdcdyid: String
-                   , dydjlx: String, bdclx: String,  wiid: String, ybh: String, djzx: String
-                   , lzrq: String, zsid: String)
-  def xmxx(spark: SparkContext): Unit = {
+  def xmxx(spark: SparkContext,filePath:String): Unit = {
     val sql1 :String = "select proid, bh, qllx, djlx, sqfbcz, xmzt, xmly, bjsj, lsh, sqlx, bdcdyid, dydjlx, bdclx, wiid" +
       ", ybh, djzx, lzrq, zsid from bdc_xm k where  1 = ? AND rownum < ?"
     //读取数据
@@ -130,10 +124,14 @@ object DataExport {
         val csvWriter = new CSVWriter(stringWriter);
         csvWriter.writeAll(data.toList)
         Iterator(stringWriter.toString)
-      }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "bdcxm")
+      }.saveAsTextFile(filePath + "bdcxm")
   }
 
-
+  case class Bdcxm(proid: String, bh: String, qllx: String, djlx: String, sqfbcz: String
+                   , xmzt: String,  xmly: String
+                   , bjsj: String, lsh: String, sqlx: String, bdcdyid: String
+                   , dydjlx: String, bdclx: String,  wiid: String, ybh: String, djzx: String
+                   , lzrq: String, zsid: String)
 
 
 }

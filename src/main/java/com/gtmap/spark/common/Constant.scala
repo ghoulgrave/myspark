@@ -6,20 +6,22 @@ import java.util.Date
 
 import scala.collection.mutable.ArrayBuffer
 
-object Constant {
+object Constant extends Serializable {
   //驱动
   val driver: String = "oracle.jdbc.driver.OracleDriver"
   //连接
-  val conn: String = "jdbc:oracle:thin:@192.168.10.200:1521:orcl"
+  var conn: String = "jdbc:oracle:thin:@192.168.10.200:1521:orcl"
   //用户
-  val user: String = "BDCDJ_WZ" //连接数据库用户名
+  var user: String = "BDCDJ_WZ" //连接数据库用户名
   //密码
-  val pwd: String = "gtis" //连接数据库密码
+  var pwd: String = "gtis" //连接数据库密码
+  //文件上传位置
+  var filePath:String = "hdfs://master:9000/Bdcdj/"
 
   //jar包位置
   val jar: String =  System.getProperty("user.dir")+"\\spark.jar"
   val jdbc: String = "D:\\spark-2.1.1-bin-hadoop2.7\\ojdbc-14.jar"
-  val jars = ArrayBuffer[String](jar, jdbc)
+  var jars = ArrayBuffer[String](jar, jdbc)
 
   //连接ORACLE数据库函数
   def createConnection() = {
