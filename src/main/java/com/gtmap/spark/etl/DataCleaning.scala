@@ -29,10 +29,10 @@ object DataCleaning {
     val spark = new SparkContext(conf)
     val nowTime = getNowDate
     //读取数据
-        val dataXm = new JdbcRDD(spark,createConnection,"select proid,BH from BDC_XM WHERE PROID='bdcdy-24383' and 1 = ? AND rownum < ?"
-          , lowerBound = 1, upperBound = 99999, numPartitions = 1,mapRow = extractValues2 )
-        val dataXmRel = new JdbcRDD(spark,createConnection,"select proid,yproid from BDC_XM_REL WHERE PROID='bdcdy-24383' and 1 = ? AND rownum < ?"
-          , lowerBound = 1, upperBound = 99999, numPartitions = 1,mapRow = extractValues2 )
+//        val dataXm = new JdbcRDD(spark,createConnection,"select proid,BH from BDC_XM WHERE PROID='bdcdy-24383' and 1 = ? AND rownum < ?"
+//          , lowerBound = 1, upperBound = 99999, numPartitions = 1,mapRow = extractValues2 )
+//        val dataXmRel = new JdbcRDD(spark,createConnection,"select proid,yproid from BDC_XM_REL WHERE PROID='bdcdy-24383' and 1 = ? AND rownum < ?"
+//          , lowerBound = 1, upperBound = 99999, numPartitions = 1,mapRow = extractValues2 )
 //        val dataDy = new JdbcRDD(spark,createConnection,"select PROID,bdcdyid,zwr from BDC_DYAQ WHERE 1 = ? AND rownum < ?"
 //          , lowerBound = 1, upperBound = 99999, numPartitions = 1,mapRow = extractValues3 )
     //  //可以将rdd连接后生成新的rdd格式

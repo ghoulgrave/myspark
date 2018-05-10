@@ -1,6 +1,9 @@
 package com.gtmap.spark.etl
 
 
+import java.text.SimpleDateFormat
+import java.util.Date
+
 import com.gtmap.spark.common.Constant
 import com.gtmap.spark.common.Constant._
 import org.apache.spark.rdd.{JdbcRDD, RDD}
@@ -13,76 +16,68 @@ import scala.collection.JavaConversions._
 object DataFromFile {
 
   def main(args: Array[String]): Unit = {
+    val filePath = "hdfs://master:9000/BdcdjCC/"
 
     val conf = new SparkConf().setAppName("DataFromat")
       .setMaster("spark://master:7077").setJars(Constant.jars)
     val spark = new SparkContext(conf)
     val nowTime = getNowDate
 
-    val spark1 = new SQLContext(spark)
-    val dy = spark1.read.format("com.databricks.spark.csv")
-      .option("header", "false")
-      .option("inferSchema", "false") //是否自动推到内容的类型
-      .option("delimiter", ",") //分隔符，默认为 ,
-      .load("hdfs://master:9000/Bdcdj/dya")
-    val rowsDY: RDD[Row] = dy.rdd
-    val dyRdd = rowsDY.keyBy(x => x(9)).map(x => (x._1.toString, (x._2(0), x._2(1), x._2(2), x._2(3), x._2(4), x._2(5), x._2(6), x._2(7)
-      , x._2(8), x._2(10), x._2(11), x._2(12))))
+    val sparkSql = new SQLContext(spark)
+    val rowsDY: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "dya")
+    val rowsXM: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "bdcxm")
+    val rowsFdcq: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "fdcq")
+    val rowsCf: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "cf")
+    val rowsQlr: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "qlrxx")
 
-    val xm = spark1.read.format("com.databricks.spark.csv")
-      .option("header", "false")
-      .option("inferSchema", "false") //是否自动推到内容的类型
-      .option("delimiter", ",") //分隔符，默认为 ,
-      .load("hdfs://master:9000/Bdcdj/bdcxm")
-    val rowsXM: RDD[Row] = xm.rdd
+    val dyRdd = rowsDY
+      .filter(x => x(9) != null)
+      .keyBy(x => x(9))
+      .map(x => Bdcdya(x._2(0), x._2(1), x._2(2), x._2(3), x._2(4)
+        , x._2(5), x._2(6), x._2(7), x._2(8), x._2(9).toString
+        , x._2(10), x._2(11), x._2(12)))
+      .map(x => (x.dyproid, x))
 
-    val fdcq = spark1.read.format("com.databricks.spark.csv")
-      .option("header", "false")
-      .option("inferSchema", "false") //是否自动推到内容的类型
-      .option("delimiter", ",") //分隔符，默认为 ,
-      .load("hdfs://master:9000/Bdcdj/fdcq")
-    val rowsFdcq: RDD[Row] = fdcq.rdd
+    val xmRdd = rowsXM
+      .filter(x => x(0) != null)
+      .keyBy(x => x(0))
+      .map(x => Bdcxm(x._1.toString, x._2(1), x._2(2), x._2(3), x._2(4), x._2(5), x._2(6), x._2(7), x._2(8)
+        , x._2(9), x._2(10), x._2(11), x._2(12), x._2(13), x._2(14), x._2(15), x._2(16), x._2(17)))
+      .filter(x => x.bdcdyid != null)
+      .map(x => (x.proid, x))
 
-
-    //    //proid关联抵押登记结束时间
-    val xmRdd = rowsXM.filter(x => x(10) != null).keyBy(x => x(0)).map(x => (x._1.toString, (x._2(1), x._2(2), x._2(3), x._2(4), x._2(5), x._2(6), x._2(7), x._2(8)
-      , x._2(9), x._2(10), x._2(11), x._2(12), x._2(13), x._2(14), x._2(15), x._2(16), x._2(17))))
+    //proid关联抵押登记结束时间
     val dysjRdd = dyRdd.leftOuterJoin(xmRdd)
       .filter(x => x._2._2 != None)
-      .filter(x => x._2._1._11 != null && !x._2._1._11.equals("null"))
-      .map(x => (x._2._1._1, x._2._1._2, x._2._1._5, x._2._1._6, x._2._1._11, x._2._2.get._7))
-    //    //    (bdcdy-76229,320506102085GB00194F00012308,2016-11-11 00:00:00.0,2026-11-11 00:00:00.0,21,2016-12-10 11:13:08.0)
-    //    //    (bdcdy-58177,320506001081GB00026F00211104,2014-08-28 00:00:00.0,2044-10-28 00:00:00.0,79,2016-09-08 09:17:13.0)
+      .filter(x => x._2._1.bdbzzqse != null && x._2._1.bdbzzqse.toString.toDouble > 0)
+      .map(x => (x._2._1.dyproid, x._2._1.dybdcdyid, x._2._1.zwlxksqx, x._2._1.zwlxjsqx, x._2._1.bdbzzqse, x._2._2.get.bjsj))
+      .filter(x => x._6 != null)
+    //    (bdcdy-76229,320506102085GB00194F00012308,2016-11-11 00:00:00.0,2026-11-11 00:00:00.0,21,2016-12-10 11:13:08.0)
+    //    (bdcdy-58177,320506001081GB00026F00211104,2014-08-28 00:00:00.0,2044-10-28 00:00:00.0,79,2016-09-08 09:17:13.0)
 
-
-    //    //bdcdyid分组
+    //bdcdyid分组
     val xmRddByBdcdyid = rowsXM.filter(x => x(10) != null).keyBy(x => x(10)).map(x => (x._2(10), (x._2(0), x._2(1), x._2(2), x._2(3)
       , x._2(4), x._2(5), x._2(6), x._2(7), x._2(8), x._2(9), x._2(10), x._2(11), x._2(12), x._2(13)
       , x._2(14), x._2(15), x._2(16), x._2(17))))
-    //
     val xmWithSj = xmRddByBdcdyid.join(dysjRdd.keyBy(x => x._2)).filter(x => x._2._2 != None)
       .filter(x => x._2._1._8 != null && x._2._2._6 != null)
       .filter(x => x._2._1._3 != null && (x._2._1._3.toString.toInt == 4 || x._2._1._3.toString.toInt == 6 || x._2._1._3.toString.toInt == 8))
       .filter(x => x._2._2._3 != null && x._2._2._4 != null)
-
     val totAllSj = xmWithSj.map(x => (x._1, (x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._8, x._2._1._11
       //nd.qlid, nd.BDCDYID, nd.ZWLXKSQX, nd.ZWLXJSQX, nd.BDBZZQSE, nd.BJSJ
       , x._2._2._1, x._2._2._2, x._2._2._3, x._2._2._4, x._2._2._5, x._2._2._6, Math.abs(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._1._8.toString).getTime -
       new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._2._6.toString).getTime), x._2._2._1
     )))
-    //    println(totAllSj.count)
     //    (320506001117GB00227F02690702,(bdc-772198,201606006040617,4,2016-09-14 10:07:16.0,320506001117GB00227F02690702,bdcdy-57595,320506001117GB00227F02690702,2014-11-30 00:00:00.0,2044-11-30 00:00:00.0,60,2016-09-06 12:03:47.0,684209000,bdcdy-57595))
     //    (320506109097GB00005F00101804,(bdc-849299,201606006101139,4,2017-01-17 13:12:15.0,320506109097GB00005F00101804,bdcdy-80785,320506109097GB00005F00101804,2015-05-18 00:00:00.0,2035-05-17 00:00:00.0,68,2016-12-28 09:56:02.0,1739773000,bdcdy-80785))
 
-    //==============
-    //    //排序并获取最小时间
+    //排序并获取最小时间
     val xmMinSj = xmWithSj.map(x => (x._2._1._1,
       Math.abs((new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._1._8.toString).getTime -
         new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S").parse(x._2._2._6.toString).getTime))
     )).sortBy(x => x._1.toString).groupByKey().map(x => (x._1, x._2.toList.sorted.reverse.last))
-    ////    (bdcdy-44722,0)
-    ////    (bdcdy-53768,0)
-    //    println(xmMinSj.count)
+    //    (bdcdy-44722,0)
+    //    (bdcdy-53768,0)
 
     //项目和抵押信息
     val xmAndDyxx = totAllSj.map(x => (x._2._1, x._2._2, x._2._3, x._2._4, x._2._5, x._2._6, x._2._7
@@ -91,8 +86,6 @@ object DataFromFile {
       .map(x => (x._2._1._1, (x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._4, x._2._1._5, x._2._1._6, x._2._1._7, x._2._1._8, x._2._1._9, x._2._1._10, x._2._1._11
         , x._2._1._12, x._2._2.toList.sorted.reverse.last, x._2._1._13)))
       .filter(x => x._2._12 == x._2._13).filter(x => x._2._9 != null)
-    //        .take(10).foreach(println)
-    //72753
     //    (bdc-752891,(bdc-752891,201606006024785,4,2016-08-09 09:18:09.0,320506432035GB00103F00900504,bdcdy-45574,320506432035GB00103F00900504,2014-05-14 00:00:00.0,2044-05-14 00:00:00.0,100,2016-07-18 10:15:53.0,1897336000,1897336000,bdcdy-45574))
     //    (bdc-733278,(bdc-733278,201606006012291,4,2016-03-24 09:17:08.0,320506129006GB00340F00050506,bdcdy-36193,320506129006GB00340F00050506,2016-04-19 00:00:00.0,2046-04-18 00:00:00.0,87,2016-05-11 14:45:30.0,4166902000,4166902000,bdcdy-36193))
 
@@ -112,20 +105,10 @@ object DataFromFile {
     //    (bdc-921161,(bdc-921161,0.9270328767123287,0.046351643835616435,bdcdy-112918,320506102080GB00156F00262108))
     //    (bdc-854898,(bdc-854898,0.9554367201426025,0.034122740005092946,bdcdy-82837,320506432105GB00032F00050601))
 
-
-    val cf = spark1.read.format("com.databricks.spark.csv")
-      .option("header", "false")
-      .option("inferSchema", "false") //是否自动推到内容的类型
-      .option("delimiter", ",") //分隔符，默认为 ,
-      .load("hdfs://master:9000/Bdcdj/cf")
-    val rowsCf: RDD[Row] = cf.rdd
-    //
     val cfByBdcdy = rowsCf.keyBy(x => x(1)).map(x => (x._1, 1))
-    //        //.take(10).foreach(println)
-    //
+
     val xmByBdcdy = rowsXM.filter(x => x(10) != null).keyBy(x => x(10)).map(x => (x._1, (x._2(0))))
-    ////      .take(10).foreach(println)
-    //
+    //      .take(10).foreach(println)
     val bdccf = xmByBdcdy.leftOuterJoin(cfByBdcdy).map(x => {
       if (x._2._2 == None) {
         (x._2._1, 0)
@@ -135,19 +118,14 @@ object DataFromFile {
     }).distinct()
 
     val baseANDCf = base.leftOuterJoin(bdccf)
-      //      //(proid,(是否有查封,proid,交易价格是否超过评估价格,年还款比例))
+      //(proid,(是否有查封,proid,交易价格是否超过评估价格,年还款比例))
       .map(x => (x._1, (x._2._2.toList.sorted.last, x._2._1._1, x._2._1._5, x._2._1._2, x._2._1._3, x._2._1._4.toString)))
     //      .take(10).foreach(println)
     //    (bdc-918950,(0,bdc-918950,320506109110GB00175F00691703,1.4096942857142858,0.050346224489795914,bdcdy-112453))
     //    (bdc-830728,(0,bdc-830728,320506109091GB00068F00020801,0.9528985507246377,0.03176328502415459,bdcdy-71941))
     //    (bdc-814539,(0,bdc-814539,320506109033GB00015F00100301,0.9527363184079602,0.03175787728026534,bdcdy-69312))
 
-    val qlr = spark1.read.format("com.databricks.spark.csv")
-      .option("header", "false")
-      .option("inferSchema", "false") //是否自动推到内容的类型
-      .option("delimiter", ",") //分隔符，默认为 ,
-      .load("hdfs://master:9000/Bdcdj/qlrxx")
-    val rowsQlr: RDD[Row] = qlr.rdd
+
     //
     val qlrRdd = rowsQlr
       .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0").filter(x => x(4) == "ywr")
@@ -225,15 +203,10 @@ object DataFromFile {
     //    (bdc-843175,((0,bdc-843175,320506129022GB00202F00130304,1.1098035842293907,0.05549017921146953,bdcdy-77823,1),425))
     //    (bdc-843175,((0,bdc-843175,320506129022GB00202F00130304,1.1098035842293907,0.05549017921146953,bdcdy-77823,1),425))
 
-    //    val objectEntity = end
-    //    .repartition(1).saveAsTextFile("/root/ipf/" + "tt"+nowTime+".csv")
-println(end.count)
-
-    //
     val file = "hdfs://master:9000/tt/" + "tt" + nowTime + ".csv"
-    val destinationFile = "file:///root/ipf/" + "data_out.csv"
+    val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
     end.map(x => {
-      x._1 + "," + Math.round(x._2.toString.toDouble *100000.0)/100000.0 + "," + Math.round(x._3.toString.toDouble*100000.0)/100000.0 + "," + x._4 + "," + x._5
+      x._1 + "," + Math.round(x._2.toString.toDouble * 100000.0) / 100000.0 + "," + Math.round(x._3.toString.toDouble * 100000.0) / 100000.0 + "," + x._4 + "," + x._5
     })
       .repartition(1).saveAsTextFile(file)
 
@@ -245,8 +218,26 @@ println(end.count)
     val hdfs = FileSystem.get(hadoopConfig)
     FileUtil.copyMerge(hdfs, new Path(file), new Path(destinationFile).getFileSystem(new Configuration()), new Path(destinationFile), false, hadoopConfig, null)
 
+    println("destinationFile:{}",destinationFile)
     println("=============================================================================")
 
+//    20180510114742
+//    20180510114828
+//    46
+//    20180510114848
+//    20180510114932
+    //54
+//    20180510115057
+//    20180510115140
+//    43
+
+
+//    20180510134705
+//    20180510134809
+//    64
+//    20180510134922
+//    20180510135008
+//    46
     spark.stop()
   }
 

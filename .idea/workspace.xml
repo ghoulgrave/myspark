@@ -6,18 +6,13 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f58ce61f-2527-48c7-9cb9-dfada9c39e1c" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/core-site.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hdfs-site.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DateOfPersion.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/权利人不动产数量.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Td.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/Te.scala" afterDir="false" />
+    <list default="true" id="f58ce61f-2527-48c7-9cb9-dfada9c39e1c" name="Default" comment="清洗数据">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DumpDateFromHDFS.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataFromFile.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataFromFile.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/抵押查封关系.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/抵押查封关系.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/gtmap/spark/sql/抵押查封关系.sql" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/gtmap/spark/sql/抵押查封关系.sql" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -68,62 +63,20 @@
       <file leaf-file-name="DataFromFile.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataFromFile.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="538">
-              <caret line="251" lean-forward="true" selection-start-line="251" selection-end-line="251" />
+            <state relative-caret-position="189">
+              <caret line="18" column="48" lean-forward="true" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Math.java" pinned="false" current-in-tab="false">
-        <entry file="jar://D:/work/jdk1.8.0_172/src.zip!/java/lang/Math.java">
+      <file leaf-file-name="DumpDateFromHDFS.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DumpDateFromHDFS.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17793">
-              <caret line="715" column="23" selection-start-line="715" selection-start-column="23" selection-end-line="715" selection-end-column="23" />
+            <state relative-caret-position="459">
+              <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
               <folding>
-                <element signature="e#28524#30784#0" />
+                <element signature="e#29#60#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Configuration.class" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/hadoop/hadoop-common/2.8.3/hadoop-common-2.8.3.jar!/org/apache/hadoop/conf/Configuration.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4455">
-              <caret line="249" column="11" selection-start-line="249" selection-start-column="11" selection-end-line="249" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DateOfPersion.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DateOfPersion.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1323">
-              <caret line="53" column="37" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="37" />
-              <folding>
-                <element signature="e#29#67#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DataExport.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="999">
-              <caret line="59" column="47" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="47" />
-              <folding>
-                <element signature="e#713#1467#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Te.scala" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/Te.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="15" column="56" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="56" />
             </state>
           </provider>
         </entry>
@@ -131,26 +84,38 @@
       <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/474640b9-e209-4c25-8064-c3e9af8658b8/console.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2376">
-              <caret line="88" column="86" selection-start-line="86" selection-start-column="53" selection-end-line="88" selection-end-column="86" />
+            <state relative-caret-position="2592">
+              <caret line="96" column="34" selection-start-line="96" selection-start-column="34" selection-end-line="96" selection-end-column="34" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="抵押查封关系.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/抵押查封关系.sql">
+      <file leaf-file-name="Constant.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1863">
-              <caret line="69" column="62" selection-start-line="69" selection-start-column="62" selection-end-line="69" selection-end-column="62" />
+            <state relative-caret-position="189">
+              <caret line="11" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="权利人不动产数量.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/权利人不动产数量.sql">
+      <file leaf-file-name="DataExport.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="9" column="16" lean-forward="true" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
+            <state relative-caret-position="233">
+              <caret line="120" column="57" lean-forward="true" selection-start-line="122" selection-start-column="92" selection-end-line="122" selection-end-column="93" />
+              <folding>
+                <element signature="e#29#56#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DataCleaning.scala" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="225">
+              <caret line="30" column="10" lean-forward="true" selection-start-line="30" selection-start-column="10" selection-end-line="30" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -160,8 +125,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Package Object" />
         <option value="Class" />
+        <option value="Package Object" />
       </list>
     </option>
   </component>
@@ -172,13 +137,16 @@
       <find>listOfRecords</find>
       <find>sortBy</find>
       <find>etl</find>
-      <find>dysjRdd</find>
       <find>totAllSj</find>
       <find>wei</find>
       <find>base</find>
       <find>fdcqRdd</find>
       <find>rowsFdcq</find>
       <find>round</find>
+      <find>dyRdd</find>
+      <find>dysjRdd</find>
+      <find>GHYT</find>
+      <find>DJZX</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -194,15 +162,17 @@
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/common/Constant.scala" />
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/基础.sql" />
         <option value="$PROJECT_DIR$/src/main/java/JDBC.scala" />
-        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala" />
-        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala" />
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/抵押查封关系.sql" />
         <option value="$PROJECT_DIR$/src/test/java/Te.scala" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/474640b9-e209-4c25-8064-c3e9af8658b8/console.sql" />
         <option value="$PROJECT_DIR$/src/test/java/Td.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala" />
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/权利人不动产数量.sql" />
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DateOfPersion.scala" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DumpDateFromHDFS.scala" />
+        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala" />
+        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala" />
+        <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala" />
         <option value="$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataFromFile.scala" />
       </list>
     </option>
@@ -250,9 +220,68 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="spark" type="b2602c69:ProjectViewProjectNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="spark" type="462c0819:PsiDirectoryNode" />
+              <item name="etl" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SONARLINT_PRECOMMIT_ANALYSIS" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.mappings" value="true" />
     <property name="WebServerToolWindowPanel.toolwindow.highlight.symlinks" value="true" />
@@ -381,8 +410,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.DataFromFile" />
-        <item itemvalue="Application.DateOfPersion" />
         <item itemvalue="Application.DataExport" />
+        <item itemvalue="Application.DateOfPersion" />
         <item itemvalue="Application.Td" />
         <item itemvalue="Application.Te" />
       </list>
@@ -420,6 +449,8 @@
       <workItem from="1525758639926" duration="12121000" />
       <workItem from="1525826047743" duration="24067000" />
       <workItem from="1525912404055" duration="409000" />
+      <workItem from="1525914325461" duration="10107000" />
+      <workItem from="1525934139020" duration="3398000" />
     </task>
     <task id="LOCAL-00001" summary="清洗数据">
       <created>1525657476551</created>
@@ -428,11 +459,18 @@
       <option name="project" value="LOCAL" />
       <updated>1525657476551</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="清洗数据">
+      <created>1525918985854</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1525918985854</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="219080000" />
+    <option name="totallyTimeSpent" value="232585000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -445,71 +483,100 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3287037" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.3287037" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
       <window_info anchor="bottom" id="Java Enterprise" order="14" weight="0.3287037" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053996" side_tool="true" weight="0.5983796" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5010799" side_tool="true" weight="0.4398148" />
       <window_info anchor="right" id="Maven Projects" order="6" weight="0.35205182" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946004" weight="0.41666666" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49892008" visible="true" weight="0.4398148" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.3298611" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.41319445" />
       <window_info anchor="right" id="Remote Host" order="0" weight="0.093952484" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.22084233" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.22462203" />
       <window_info anchor="right" id="Bean Validation" order="7" weight="0.32991362" />
+      <window_info anchor="bottom" id="SonarLint" order="15" weight="0.3298611" />
       <window_info id="Database" order="5" weight="0.16900648" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info id="UI Designer" order="3" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4502315" />
       <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info anchor="bottom" id="Database Console" order="12" sideWeight="0.49946004" weight="0.5983796" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="1" weight="0.4" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.3290993" />
+      <window_info anchor="bottom" id="Database Console" order="12" sideWeight="0.49946004" weight="0.5983796" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3298611" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.3287037" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.3290993" />
     </layout>
     <layout-to-restore>
-      <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
-      <window_info id="Favorites" order="4" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946004" visible="true" weight="0.41666666" />
-      <window_info anchor="right" id="Remote Host" order="0" weight="0.093952484" />
-      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.3290993" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22084233" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3287037" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.3298611" />
-      <window_info anchor="bottom" id="Java Enterprise" order="14" weight="0.3287037" />
       <window_info id="Designer" order="2" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Remote Host" order="0" weight="0.093952484" />
+      <window_info anchor="bottom" id="Database Console" order="12" sideWeight="0.49946004" weight="0.5983796" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49892008" visible="true" weight="0.4398148" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info id="UI Designer" order="3" />
+      <window_info id="Favorites" order="4" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.41319445" />
+      <window_info anchor="right" id="Commander" order="1" weight="0.4" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5010799" side_tool="true" weight="0.4398148" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.3287037" />
+      <window_info anchor="bottom" id="File Transfer" order="13" weight="0.3290993" />
+      <window_info anchor="bottom" id="SonarLint" order="15" weight="0.3298611" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="bottom" id="Java Enterprise" order="14" weight="0.3287037" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.3298611" />
+      <window_info anchor="right" id="Maven Projects" order="6" weight="0.35205182" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22462203" />
+      <window_info id="Database" order="5" weight="0.16900648" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.3287037" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3298611" />
       <window_info anchor="right" id="Bean Validation" order="7" weight="0.32991362" />
-      <window_info id="Database" order="5" weight="0.16900648" />
-      <window_info anchor="right" id="Palette&#9;" order="5" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.41319445" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50053996" side_tool="true" weight="0.5983796" />
-      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4502315" />
-      <window_info anchor="bottom" id="Database Console" order="12" sideWeight="0.49946004" weight="0.5983796" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.3287037" />
-      <window_info anchor="right" id="Maven Projects" order="6" weight="0.35205182" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -527,8 +594,14 @@
           <properties />
           <option name="timeStamp" value="6" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="scala-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala</url>
+          <line>41</line>
+          <properties />
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="7" />
+      <option name="time" value="10" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -550,34 +623,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/权利人不动产数量.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="9" column="16" lean-forward="true" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2106">
-          <caret line="78" column="12" lean-forward="true" selection-start-line="10" selection-start-column="4" selection-end-line="78" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/MySpark.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="5" column="37" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="10" column="44" lean-forward="true" selection-start-line="10" selection-start-column="44" selection-end-line="10" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/log4j.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="27">
@@ -600,13 +645,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="20" selection-start-line="20" selection-end-line="20" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.2.1/spark-sql_2.11-2.2.1.jar!/org/apache/spark/sql/SQLContext.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -650,13 +688,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="27">
           <caret line="64" selection-start-line="62" selection-end-line="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.2.1/spark-sql_2.11-2.2.1.jar!/org/apache/spark/sql/DataFrameReader.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="3" column="81" selection-start-line="3" selection-start-column="66" selection-end-line="3" selection-end-column="81" />
         </state>
       </provider>
     </entry>
@@ -734,13 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1504">
-          <caret line="85" column="54" lean-forward="true" selection-start-line="85" selection-start-column="36" selection-end-line="85" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.11.8/scala-library-2.11.8.jar!/scala/collection/SeqProxyLike.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -792,13 +816,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="52" column="11" selection-start-line="52" selection-start-column="11" selection-end-line="52" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.2.1/spark-core_2.11-2.2.1.jar!/org/apache/spark/rdd/PairRDDFunctions.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -810,13 +827,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="15" column="56" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/474640b9-e209-4c25-8064-c3e9af8658b8/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2376">
-          <caret line="88" column="86" selection-start-line="86" selection-start-column="53" selection-end-line="88" selection-end-column="86" />
         </state>
       </provider>
     </entry>
@@ -844,7 +854,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/sql/权利人不动产数量.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
-          <caret line="9" column="16" lean-forward="true" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
+          <caret line="9" column="16" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -859,19 +869,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1323">
           <caret line="53" column="37" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="37" />
-          <folding>
-            <element signature="e#29#67#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="999">
-          <caret line="59" column="47" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="47" />
-          <folding>
-            <element signature="e#713#1467#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -892,10 +889,89 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/474640b9-e209-4c25-8064-c3e9af8658b8/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2592">
+          <caret line="96" column="34" selection-start-line="96" selection-start-column="34" selection-end-line="96" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://D:/work/jdk1.8.0_172/src.zip!/java/sql/DriverManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="235" column="28" selection-start-line="235" selection-start-column="18" selection-end-line="235" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.11/2.2.1/spark-core_2.11-2.2.1.jar!/org/apache/spark/rdd/JdbcRDD.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="1" column="104" selection-start-line="1" selection-start-column="94" selection-end-line="1" selection-end-column="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="54">
+            <caret line="2" column="15" lean-forward="true" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.2.1/spark-sql_2.11-2.2.1.jar!/org/apache/spark/sql/SQLContext.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="2" column="16" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-sql_2.11/2.2.1/spark-sql_2.11-2.2.1.jar!/org/apache/spark/sql/DataFrameReader.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DumpDateFromHDFS.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
+          <folding>
+            <element signature="e#29#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/common/Constant.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataCleaning.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="30" column="10" lean-forward="true" selection-start-line="30" selection-start-column="10" selection-end-line="30" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataExport.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="233">
+          <caret line="120" column="57" lean-forward="true" selection-start-line="122" selection-start-column="92" selection-end-line="122" selection-end-column="93" />
+          <folding>
+            <element signature="e#29#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/gtmap/spark/etl/DataFromFile.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="538">
-          <caret line="251" lean-forward="true" selection-start-line="251" selection-end-line="251" />
+        <state relative-caret-position="189">
+          <caret line="18" column="48" lean-forward="true" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
         </state>
       </provider>
     </entry>
