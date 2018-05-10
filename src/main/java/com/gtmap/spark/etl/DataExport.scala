@@ -46,7 +46,7 @@ object DataExport {
 
   def bdcdya(spark: SparkContext): Unit = {
     val sql :String = " select qlid,BDCDYID,replace(zwr,chr(13)||chr(10),' ') as zwr,dyfs,ZWLXKSQX,ZWLXJSQX,ZXDYYWH" +
-      ",ZXSJ,YWH,PROID,QSZT,BDBZZQSE,ZGZQQDSE from BDC_DYAQ where 1 = ? AND rownum < ?"
+      ",ZXSJ,YWH,PROID,QSZT,case when ZGZQQDSE is not null then ZGZQQDSE else BDBZZQSE * 1.5 end as bdbzzqse,ZGZQQDSE from BDC_DYAQ where 1 = ? AND rownum < ?"
     //读取数据
     val bdcdya = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
       , mapRow = extractValues13)
@@ -92,11 +92,11 @@ object DataExport {
       }.saveAsTextFile("hdfs://master:9000/Bdcdj/" + "qlrxx")
   }
   def fdcq(spark: SparkContext): Unit = {
-    val sql :String = "select qlid,bdcdyid,proid,ghyt,JYJG from bdc_fdcq t where  1 = ? AND rownum < ?"
+    val sql :String = "select qlid,bdcdyid,proid,ghyt,JYJG,qszt from bdc_fdcq t where  1 = ? AND rownum < ?"
     //读取数据
     val dataXm = new JdbcRDD(spark, createConnection, sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
-      , mapRow = extractValues5)
-    val objectEntity = dataXm.keyBy(x => (x._1)).map(x => List(x._1, x._2._2,x._2._3,x._2._4,x._2._5).toArray)
+      , mapRow = extractValues6)
+    val objectEntity = dataXm.keyBy(x => (x._1)).map(x => List(x._1, x._2._2,x._2._3,x._2._4,x._2._5,x._2._6).toArray)
       .mapPartitions { data =>
         val stringWriter = new StringWriter();
         val csvWriter = new CSVWriter(stringWriter);
