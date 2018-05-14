@@ -15,7 +15,7 @@ object DataExport {
   //连接
   val conn: String = "jdbc:oracle:thin:@192.168.10.200:1521:orcl"
   //用户
-  val user: String = "BDCDJ_CC" //连接数据库用户名
+  val user: String = "BDCDJ_ZHJG" //连接数据库用户名
   //密码
   val pwd: String = "gtis" //连接数据库密码
 
@@ -25,14 +25,14 @@ object DataExport {
     val spark = new SparkContext(conf)
 
     //文件上传位置
-    val filePath: String = "hdfs://master:9000/BdcdjCC/"
+    val filePath: String = "hdfs://master:9000/BdcdjHRB/"
 
-    fdcq(spark,filePath)
-    bdccf(spark,filePath)
-    bdcdya(spark,filePath)
+//    fdcq(spark,filePath)
+//    bdccf(spark,filePath)
+//    bdcdya(spark,filePath)
 //    bdcxmrel(spark,filePath)
-    qlrxx(spark,filePath)
-    xmxx(spark,filePath)
+//    qlrxx(spark,filePath)
+//    xmxx(spark,filePath)
 
     println("OK");
   }
@@ -70,7 +70,7 @@ object DataExport {
   }
 
   def bdcxmrel(spark: SparkContext,filePath:String): Unit = {
-    val sql :String = "select  RELID,PROID,QJID,YPROID,YDJXMLY,YQLID from BDC_XM_REL where 1 = ? AND rownum < ?"
+    val sql :String = "select  RELID,PROID,QJID,YPROID,YDJXMLY,'' as YQLID from BDC_XM_REL where 1 = ? AND rownum < ?"
     //读取数据
     val bdcxmrel = new JdbcRDD(spark, ()=> createConnection(conn,user,pwd), sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
       , mapRow = extractValues6)
@@ -84,7 +84,7 @@ object DataExport {
   }
 
   def qlrxx(spark: SparkContext,filePath:String): Unit = {
-    val sql :String = "select qlrid,proid,replace(qlr,chr(13)||chr(10),' ') as qlr,qlrzjh,qlrlx,replace(qlbl,chr(13)||chr(10),' ') as qlbl, gyfs,qlrxz,sxh,'' as gyqk,0.0 as qlmj,'' as QLRFDDBRZJH " +
+    val sql :String = "select qlrid,proid,replace(qlr,chr(13)||chr(10),' ') as qlr,qlrzjh,qlrlx,replace(qlbl,chr(13)||chr(10),' ') as qlbl, gyfs,qlrxz,sxh,'' as gyqk,0.0 as qlmj,qlrsfzjzl " +
       "from bdc_qlr t where  1 = ? AND rownum < ?"
     //读取数据
     val dataXm = new JdbcRDD(spark, ()=> createConnection(conn,user,pwd), sql, lowerBound = 1, upperBound = 999999, numPartitions = 1

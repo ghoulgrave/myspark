@@ -16,7 +16,7 @@ import scala.collection.JavaConversions._
 object DataFromFile {
 
   def main(args: Array[String]): Unit = {
-    val filePath = "hdfs://master:9000/BdcdjCC/"
+    val filePath = "hdfs://master:9000/BdcdjHRB/"
 
     val conf = new SparkConf().setAppName("DataFromat")
       .setMaster("spark://master:7077").setJars(Constant.jars)
@@ -129,7 +129,7 @@ object DataFromFile {
     //
     val qlrRdd = rowsQlr
       .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0").filter(x => x(4) == "ywr")
-      .keyBy(x => x(3))
+      .keyBy(x => x(3)+"^"+x(2))
       .map(x => (x._1, (x._2(1), x._2(3), x._2(2).toString.replaceAll("<[0-9]+.[0-9]+.[0-9]+>", ""))))
     //      .take(10).foreach(println)
     //    (91320507762402583X,(bdc-870691,91320507762402583X,苏州新中天置业有限公司))

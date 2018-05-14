@@ -15,6 +15,16 @@ object Te {
 
     val mm = str.replaceAll("<[0-9]+.[0-9]+.[0-9]+>","")
 
-    print(mm)
+
+
+    val t ="周雪娟(0.01%),李志均(40%)"
+    t.indexOf("周雪娟")
+    val pattern = "(-?\\d+)(\\.\\d+)?".r
+    println((pattern findFirstIn t).toList.sorted.last)
+
+    println(1000/(1970-1900.0))
+    println(1000/(1980.0-1900.0))
+    println(1000/(1990.0-1900.0))
+    println(1000/(2000.0-1900.0))
   }
 }
