@@ -1,28 +1,12 @@
 package com.gtmap.spark.etl
 
-import java.io.StringWriter
-import java.sql.{DriverManager, ResultSet}
-
-import au.com.bytecode.opencsv.CSVWriter
-import org.apache.spark.rdd.{JdbcRDD, RDD}
-import org.apache.spark.sql.{Row, SQLContext}
-import org.apache.spark.{SparkConf, SparkContext}
-
-import scala.collection.JavaConversions._
-import scala.collection.mutable.ListBuffer
-import scala.util.Random
-import au.com.bytecode.opencsv.CSVWriter
 import com.gtmap.spark.common.Constant
-import com.gtmap.spark.common.Constant._
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringType
-import org.apache.spark.sql.types.{StructField, StructType}
-import org.slf4j.{Logger, LoggerFactory}
+import com.gtmap.spark.common.Constant.getNowDate
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.{Row, SQLContext}
 
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
-import scala.util.control.Exception
-
-object DataCleaning {
-  val logger: Logger = LoggerFactory.getLogger(DataCleaning.getClass)
+object RyFdcqAndDyaq {
 
   def main(args: Array[String]): Unit = {
     val masterStr = "172.16.175.128";
@@ -34,6 +18,7 @@ object DataCleaning {
     val sparkSql = new SQLContext(spark)
     val rowsFdcq: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql, filePath + "fdcq")
     val rowsCf: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql, filePath + "cf")
+    val rowsDY: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "dya")
     val rowsQlr: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql, filePath + "qlrxx")
     val rowsXM: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql, filePath + "bdcxm")
 
@@ -85,7 +70,7 @@ object DataCleaning {
       .map(x => (x._1, Math.sqrt(Math.sqrt(Math.sqrt(x._2 * 10000)))))
       .map(x => (x._1, Math.sqrt(Math.sqrt(Math.sqrt(Math.sqrt(x._2 * 10000))))))
       .filter(x => x._2 > 0)
-//    println(end.count) // 数据总数有问题
+    //    println(end.count) // 数据总数有问题
     val ywr = rowsQlr
       .filter(x => x(1) != null) //proid
       .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0") // qlrmc 和 qlrzjh
@@ -115,25 +100,25 @@ object DataCleaning {
           (x._1,x._2._1,x._2._2.toList.sorted.last)
         }
       })
-//      .take(10).foreach(println)
+    //      .take(10).foreach(println)
 
 
-        val file = "hdfs://"+masterStr+":9000/tt/" + "tt" + nowTime + ".csv"
-        val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
+    val file = "hdfs://"+masterStr+":9000/tt/" + "tt" + nowTime + ".csv"
+    val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
     xx.map(x => {
-                          x._1+","+x._2+","+x._3
-//          x._1 + "," + x._2
-        }).repartition(1).saveAsTextFile(file)
+      x._1+","+x._2+","+x._3
+      //          x._1 + "," + x._2
+    }).repartition(1).saveAsTextFile(file)
 
-        import org.apache.hadoop.conf.Configuration
-        import org.apache.hadoop.fs._
-        val hadoopConfig = new Configuration()
-        hadoopConfig.set("mapred.jop.tracker", "hdfs://"+masterStr+":9001")
-        hadoopConfig.set("fs.default.name", "hdfs://"+masterStr+":9000")
-        val hdfs = FileSystem.get(hadoopConfig)
-        FileUtil.copyMerge(hdfs, new Path(file), new Path(destinationFile).getFileSystem(new Configuration()), new Path(destinationFile), false, hadoopConfig, null)
+    import org.apache.hadoop.conf.Configuration
+    import org.apache.hadoop.fs._
+    val hadoopConfig = new Configuration()
+    hadoopConfig.set("mapred.jop.tracker", "hdfs://"+masterStr+":9001")
+    hadoopConfig.set("fs.default.name", "hdfs://"+masterStr+":9000")
+    val hdfs = FileSystem.get(hadoopConfig)
+    FileUtil.copyMerge(hdfs, new Path(file), new Path(destinationFile).getFileSystem(new Configuration()), new Path(destinationFile), false, hadoopConfig, null)
 
-        println("destinationFile:", destinationFile)
+    println("destinationFile:", destinationFile)
 
     spark.stop()
   }
