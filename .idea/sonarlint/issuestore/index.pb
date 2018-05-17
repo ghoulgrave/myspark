@@ -19,3 +19,7 @@ F
 src/test/java/Te.scala,8\e\8e857a2a37517aec81cf19310a74021cdaa79eb6
 K
 src/main/java/MySpark.scala,1\2\12dec4ded1c5ab087895f884325827d808591bea
+S
+#src/main/resources/log4j.properties,7\5\755950bb690295904a49d36e60958901c54013b8
+e
+5src/main/java/com/gtmap/spark/etl/RyFdcqAndDyaq.scala,7\8\78120c81967ec7cbae4e1220981c4de1ee5a8900

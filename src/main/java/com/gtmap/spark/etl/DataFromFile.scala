@@ -16,12 +16,13 @@ import scala.collection.JavaConversions._
 object DataFromFile {
 
   def main(args: Array[String]): Unit = {
-    val filePath = "hdfs://master:9000/BdcdjHRB/"
 
-    val conf = new SparkConf().setAppName("DataFromat")
-      .setMaster("spark://master:7077").setJars(Constant.jars)
+    val masterStr = "172.16.175.128";
+    val conf = new SparkConf().setAppName("xst")
+      .setMaster("spark://" + masterStr + ":7077").setJars(Constant.jars)
     val spark = new SparkContext(conf)
     val nowTime = getNowDate
+    val filePath = "hdfs://"+masterStr+":9000/BdcdjHRB/"
 
     val sparkSql = new SQLContext(spark)
     val rowsDY: RDD[Row] = DumpDateFromHDFS.getDataFrame(sparkSql,filePath + "dya")
@@ -119,127 +120,152 @@ object DataFromFile {
 
     val baseANDCf = base.leftOuterJoin(bdccf)
       //(proid,(是否有查封,proid,交易价格是否超过评估价格,年还款比例))
-      .map(x => (x._1, (x._2._2.toList.sorted.last, x._2._1._1, x._2._1._5, x._2._1._2, x._2._1._3, x._2._1._4.toString)))
+      .map(x => (x._1, x._2._2.toList.sorted.last, x._2._1._1, x._2._1._5, x._2._1._2, x._2._1._3, x._2._1._4.toString))
     //      .take(10).foreach(println)
     //    (bdc-918950,(0,bdc-918950,320506109110GB00175F00691703,1.4096942857142858,0.050346224489795914,bdcdy-112453))
     //    (bdc-830728,(0,bdc-830728,320506109091GB00068F00020801,0.9528985507246377,0.03176328502415459,bdcdy-71941))
     //    (bdc-814539,(0,bdc-814539,320506109033GB00015F00100301,0.9527363184079602,0.03175787728026534,bdcdy-69312))
 
+    val end = this.bdcQlr(rowsQlr,rowsDY,rowsXM,rowsFdcq,rowsCf)
 
-    //
-    val qlrRdd = rowsQlr
-      .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0").filter(x => x(4) == "ywr")
-      .keyBy(x => x(3)+"^"+x(2))
-      .map(x => (x._1, (x._2(1), x._2(3), x._2(2).toString.replaceAll("<[0-9]+.[0-9]+.[0-9]+>", ""))))
-    //      .take(10).foreach(println)
-    //    (91320507762402583X,(bdc-870691,91320507762402583X,苏州新中天置业有限公司))
-    //    (91320507762402583X,(bdc-870692,91320507762402583X,苏州新中天置业有限公司))
-    //    (113205060141960080,(bdc-871973,113205060141960080,苏州市吴中区人民政府香山街道办事处))
+    //权利人信息,proid为主键
+    val qlrByproid = rowsQlr
+      .filter(x => x(1) != null) //proid
+      .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0") // qlrmc 和 qlrzjh
+      .keyBy(x => x(1)) //proid
 
-    val qlrRddCount = qlrRdd
-      .map(x => (x._1.toString + x._2._3, 1))
-      .filter(x => x._1 != null)
-      .reduceByKey(_ + _)
-    //    (320523197112318119郭静芳,1)
-    //    (342726196807071723王磊,1)
-    val qlrSum = qlrRdd.keyBy(x => x.x._1.toString + x._2._3).leftOuterJoin(qlrRddCount)
-      .map(x => (x._2._1._2._1, x._2._1._2._2, x._2._1._2._3, x._2._2.toList.sorted.last))
-      .keyBy(x => x._1.toString)
-    //      .take(10).foreach(println)
-    //    (bdc-741179,(bdc-741179,320524197911265814,吴冬明,3))
-    //    (bdc-739639,(bdc-739639,320524197911265814,吴冬明,3))
-    //    (bdc-741208,(bdc-741208,320524197911265814,吴冬明,3))
-    //    (bdcdy-69532,(bdcdy-69532,320586198002236817,陈敏,1))
-    //    (bdcdy-114502,(bdcdy-114502,110108198002280033,刘一宁,1))
+    val qlrAllByxmzjh = qlrByproid.map(x => (x._1.toString,x._2(2).toString.replace(",", "，").trim,x._2(3).toString.trim))
+      .map(x=>(x._2+"^"+x._3,x._1))
+      .keyBy(x=>x._1)
 
-    val baseANDCfAndQlr = baseANDCf
-      .map(x => (x._2._6.toString, (x._2._1, x._2._2, x._2._3, x._2._4, x._2._5, x._2._6)))
-      .leftOuterJoin(qlrSum)
-      .filter(x => x._2._2 != None)
-      .map(x => (x._2._1._2, (x._2._1._1, x._2._1._2, x._2._1._3, x._2._1._4, x._2._1._5, x._2._1._6, x._2._2.toList.get(0)._4)))
+    val qlrByPro = qlrAllByxmzjh.leftOuterJoin(end.keyBy(x=>x._1))
+//      .filter(x=>x._2._2 != None)
+//      .take(10).foreach(println)
 
-    //    (bdc-795155,(0,bdc-795155,320506432118GB00090F00050206,1.0362386666666668,0.06476491666666667,bdcdy-53768,1))
-    //    (bdc-795155,(0,bdc-795155,320506432118GB00090F00050206,1.0362386666666668,0.06476491666666667,bdcdy-53768,1))
-    //    (bdc-821399,(0,bdc-821399,320506001057GB00107F00020501,1.3333333333333333,0.13333333333333333,bdcdy-68001,1))
+      baseANDCf.keyBy(x=>x._1).join(qlrByPro.keyBy(x=>x._2._1._2))
+      .take(10).foreach(println)
 
+//    end.take(10).foreach(println)
 
-    val qlrRdd2 = qlrRdd.map(x => (x._2._1, x._1 + "^" + x._2._3))
-    //    //      println(qlrRdd.count)
-    //    //      qlrRdd.take(10).foreach(println)
-    //    //    286480
-    //    //    (bdc-801674,513023197104056746熊德蓉)
-    //    //    (bdc-801973,320524196401137017杭火林)
-    //    //    (bdc-802790,320681198910090829陈晓明)
-    //
-    val fdcqRdd = rowsFdcq.keyBy(x => x(2)).filter(x => x._2(5) != null).filter(x => x._2(5).toString.toInt == 1)
-      .map(x => (x._1, x._2(1)))
-    //    //      println(fdcqRdd.count)
-    //    //      fdcqRdd.take(10).foreach(println)
-    //    //    186301
-    //    //    (bdcsc-865429,320506104121GB00022F00120906)
-    //    //    (bdcsc-863899,320506014003GB00013F00012092)
-    //    //    (bdcsc-864088,320506014003GB00013F00011035)
-    //
-    val qlrAndBdcdy = fdcqRdd.leftOuterJoin(qlrRdd2)
-      .filter(x => x._2._2 != None)
-      .map(x => (x._2._2.toList.sorted.last, 1))
-      .reduceByKey(_ + _)
-    //    //    println(qlrAndBdcdy.count)
-    //    //    qlrAndBdcdy.take(10).foreach(println)
-    //    //    153106
-    //    //    (220222197310290034^朴铉哲,1)
-    //    //    (342822197103305119^胡少根,2)
-    //    //    (370982198207216874^刘传新,1)
-    //
-    val qlrAndBdcdyAndProid = qlrRdd2.keyBy(x => x._2).leftOuterJoin(qlrAndBdcdy)
-      .filter(x => x._2._2 != None)
-      .map(x => (x._2._1._1, x._2._2.toList.sorted.last))
+//    val file = "hdfs://" + masterStr + ":9000/tt/" + "tt" + nowTime + ".csv"
+//    val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
+//    endRdd.map(x => {
+//      //        x._1 + "," + x._2 + "," + x._3 + "," + x._4
+//      x._1 + "," + x._2 + "," + x._3
+//    })
+//      .repartition(1)
+//      .distinct.saveAsTextFile(file)
+//
+//    import org.apache.hadoop.conf.Configuration
+//    import org.apache.hadoop.fs._
+//    val hadoopConfig = new Configuration()
+//    hadoopConfig.set("mapred.jop.tracker", "hdfs://" + masterStr + ":9001")
+//    hadoopConfig.set("fs.default.name", "hdfs://" + masterStr + ":9000")
+//    val hdfs = FileSystem.get(hadoopConfig)
+//    FileUtil.copyMerge(hdfs, new Path(file), new Path(destinationFile).getFileSystem(new Configuration()), new Path(destinationFile), false, hadoopConfig, null)
+//    println("destinationFile:", destinationFile)
 
-    val end = baseANDCfAndQlr.join(qlrAndBdcdyAndProid)
-      .map(x => (x._2._1._1, x._2._1._4, x._2._1._5, x._2._1._7, x._2._2))
-    //        .take(10).foreach(println)
-
-    //    (bdc-818506,((0,bdc-818506,320506109110GB00170F00722502,0.9534553191489361,0.06810395136778115,bdcdy-69136,1),1097))
-    //    (bdc-843175,((0,bdc-843175,320506129022GB00202F00130304,1.1098035842293907,0.05549017921146953,bdcdy-77823,1),425))
-    //    (bdc-843175,((0,bdc-843175,320506129022GB00202F00130304,1.1098035842293907,0.05549017921146953,bdcdy-77823,1),425))
-
-    val file = "hdfs://master:9000/tt/" + "tt" + nowTime + ".csv"
-    val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
-    end.map(x => {
-      x._1 + "," + Math.round(x._2.toString.toDouble * 100000.0) / 100000.0 + "," + Math.round(x._3.toString.toDouble * 100000.0) / 100000.0 + "," + x._4 + "," + x._5
-    })
-      .repartition(1).saveAsTextFile(file)
-
-    import org.apache.hadoop.conf.Configuration
-    import org.apache.hadoop.fs._
-    val hadoopConfig = new Configuration()
-    hadoopConfig.set("mapred.jop.tracker", "hdfs://master:9001")
-    hadoopConfig.set("fs.default.name", "hdfs://master:9000")
-    val hdfs = FileSystem.get(hadoopConfig)
-    FileUtil.copyMerge(hdfs, new Path(file), new Path(destinationFile).getFileSystem(new Configuration()), new Path(destinationFile), false, hadoopConfig, null)
-
-    println("destinationFile:{}",destinationFile)
     println("=============================================================================")
-
-//    20180510114742
-//    20180510114828
-//    46
-//    20180510114848
-//    20180510114932
-    //54
-//    20180510115057
-//    20180510115140
-//    43
-
-
-//    20180510134705
-//    20180510134809
-//    64
-//    20180510134922
-//    20180510135008
-//    46
     spark.stop()
   }
 
+
+
+  def bdcQlr(rowsQlr: RDD[Row],rowsDY: RDD[Row],rowsXM: RDD[Row],rowsFdcq: RDD[Row],rowsCf: RDD[Row]) = {
+
+    //权利人信息,proid为主键
+    val qlrByproid = rowsQlr
+      .filter(x => x(1) != null) //proid
+      .filter(x => x(3) != null && x(2) != null && x(3) != "0" && x(2) != "0") // qlrmc 和 qlrzjh
+      .keyBy(x => x(1)) //proid
+    val ywr = qlrByproid.filter(x => x._2(4) == "ywr")
+
+    //权利人抵押数量
+    val qlrDySl = rowsDY
+      .filter(x => x(9) != null).keyBy(x => (x(9)))
+      .join(ywr)
+      .filter(x => x._2._1(10) != null && x._2._1(10).toString.toInt == 1)
+      .map(x => (x._2._2(2).toString.replace(",", "，").trim + "^" + x._2._2(3).toString().trim, 1))
+      .reduceByKey(_ + _)
+
+    //基础项目表
+    val xmBase = rowsXM
+      .filter(x => x(0) != null) //proid
+      .filter(x => x(2) != null) //qllx
+      .keyBy(x => x(0)) //proid
+      //proid,qllx
+      .map(x => (x._1.toString, x._2(2).toString.replace("4,6,8", "4").toInt))
+      .filter(x => x._2 == 4 || x._2 == 6 || x._2 == 8)
+
+    val qlrCq = qlrByproid
+      .filter(x => x._2(4) == "qlr")
+      .join(xmBase.keyBy(x => x._1))
+      .map(x => (x._1, x._2._1))
+      .join(rowsFdcq.keyBy(x => x(2)))
+      .map(x => {
+        if (x._2._1(5) == null) {
+          (x._2._1(2).toString.replace(",", ""), x._2._1(3).toString, x._2._1(11), x._2._2(1), 1)
+        } else {
+          (x._2._1(2).toString.replace(",", ""), x._2._1(3).toString, x._2._1(11), x._2._2(1).toString, x._2._1(5).toString.replace("﹪", "%").toDouble)
+        }
+      })
+      .filter(x => x._3 == null || (x._3.toString != "6" && x._3.toString != "7"))
+      .map(x => (x._1.toString.replace(",", "，") + "^" + x._2, x._5))
+      .map(x => (x._1.toString, x._2.toString.toDouble))
+      .reduceByKey(_ + _)
+      .filter(x => x._2 > 0) //218396
+      .map(x => (x._1,x._2, x._1.split("\\^")(1)))
+      .filter(x => x._3.trim.length == 18)
+      .map(x => (x._1, x._2, x._3.substring(6, 12)))
+      .map(x => {
+        var x3Val: Double = 0.0
+        try {
+          x3Val = x._3.toDouble
+        } catch {
+          case ex: Exception => x3Val = 197001.0
+        }
+        if (x3Val <= 0) {
+          x3Val = 197001.0
+        }
+        (x._1, x._2 * BigInt(10).pow(x3Val.toInt.toString.length - 1).toDouble / (x3Val - 190001.0) )
+      })
+      .map(x => (x._1, Math.sqrt(Math.sqrt(Math.sqrt(x._2)))))
+      //      .map(x => (x._1, Math.sqrt(Math.sqrt(Math.sqrt(x._2 * 10000)))))
+      //      .map(x => (x._1, Math.sqrt(Math.sqrt(Math.sqrt(Math.sqrt(x._2 * 10000))))))
+      .filter(x => x._2 > 0)
+
+
+    //查封项目
+    val xmCf = rowsXM.filter(x => x(0) != null && x(10) != null).keyBy(x => x(0) + x(10).toString)
+      .join(rowsCf.filter(x => x(7) != null && x(1) != null).keyBy(x => x(7) + x(1).toString))
+      .map(x => (x._2._1(0))).keyBy(x => x)
+
+    val qlrCf = ywr.leftOuterJoin(xmCf) //proid
+      .map(x => {
+      if (x._2._2 == None) {
+        (x._2._1(0), x._2._1(1), x._2._1(2), x._2._1(3), x._2._1(4), 0)
+      } else {
+        (x._2._1(0), x._2._1(1), x._2._1(2), x._2._1(3), x._2._1(4), 1)
+      }
+    })
+      .map(x => (x._3.toString.replace(",", "，") + "^" + x._4.toString.trim, x._6))
+      .reduceByKey(_ + _)
+      .map(x => {
+        if (x._2 > 0) {
+          (x._1, 1)
+        } else {
+          (x._1, 0)
+        }
+      })
+    val endRdd = qlrCq.leftOuterJoin(qlrCf)
+      .map(x => {
+        if (x._2._2 == None) {
+          (x._1, x._2._1, 0)
+        } else {
+          (x._1, x._2._1, x._2._2.toList.sorted.last)
+        }
+      })
+    endRdd
+  }
 
 }

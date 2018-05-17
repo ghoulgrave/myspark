@@ -22,9 +22,12 @@ object Te {
     val pattern = "(-?\\d+)(\\.\\d+)?".r
     println((pattern findFirstIn t).toList.sorted.last)
 
-    println(1000/(1970-1900.0))
-    println(1000/(1980.0-1900.0))
-    println(1000/(1990.0-1900.0))
-    println(1000/(2000.0-1900.0))
+    println(Math.round(84/10.0)*10)
+    println(Math.round(85/10.0)*10)
+    println(Math.round(86/10.0)*10)
+    println(Math.round(94/10.0)*10)
+    println(Math.round(95/10.0)*10)
+    println(Math.round(96/10.0)*10)
+
   }
 }
