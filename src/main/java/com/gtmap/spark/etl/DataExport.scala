@@ -54,8 +54,10 @@ object DataExport {
   }
 
   def bdcdya(spark: SparkContext,filePath:String): Unit = {
+    //0,1,2,3,4,5,6
     val sql :String = " select qlid,BDCDYID,replace(zwr,chr(13)||chr(10),' ') as zwr,dyfs,ZWLXKSQX,ZWLXJSQX,ZXDYYWH" +
-      ",ZXSJ,YWH,PROID,QSZT,case when ZGZQQDSE is not null then ZGZQQDSE else BDBZZQSE * 1.5 end as bdbzzqse,ZGZQQDSE from BDC_DYAQ where 1 = ? AND rownum < ?"
+     //,7,8,9,10,11,12
+      ",ZXSJ,YWH,PROID,QSZT,bdbzzqse,ZGZQQDSE from BDC_DYAQ where 1 = ? AND rownum < ?"
     //读取数据
     val bdcdya = new JdbcRDD(spark, ()=> createConnection(conn,user,pwd), sql, lowerBound = 1, upperBound = 999999, numPartitions = 1
       , mapRow = extractValues13)
