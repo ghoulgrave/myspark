@@ -45,6 +45,7 @@ object DataFromFile {
       .map(x => Bdcxm(x._1.toString, x._2(1), x._2(2), x._2(3), x._2(4), x._2(5), x._2(6), x._2(7), x._2(8)
         , x._2(9), x._2(10), x._2(11), x._2(12), x._2(13), x._2(14), x._2(15), x._2(16), x._2(17)))
       .filter(x => x.bdcdyid != null)
+      .filter(x=>x.xmzt!= null && x.xmzt.toString.toInt == 1)
       .map(x => (x.proid, x))
 
     //proid关联抵押登记结束时间
