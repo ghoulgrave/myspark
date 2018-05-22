@@ -25,8 +25,8 @@ object OldDate {
     //    df.take(10).foreach(println)
    val oldRdd = df.rdd.keyBy(x => x(0)).map(x=>(x._1.toString.toInt,(x._2(0),x._2(1),x._2(2),x._2(3),x._2(4))))
 
-    val sampleMap = List((1, 1.0), (0, 0.008)).toMap
-    val sample2 = oldRdd.sampleByKeyExact(false, sampleMap, 1)
+    val sampleMap = List((1, 1.0), (0, 0.01)).toMap
+    val sample2 = oldRdd.sampleByKeyExact(false, sampleMap, 100)
 
     val file = "hdfs://" + masterStr + ":9000/tt/" + "tt" + nowTime + ".csv"
     val destinationFile = "file:///root/ipf/" + "data_out" + nowTime + ".csv"
